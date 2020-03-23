@@ -1,0 +1,267 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Tags manager API",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0"
+  },
+  "basePath": "/",
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health endpoint",
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.EmptyBody"
+            }
+          },
+          "500": {
+            "description": "Server is down",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.EmptyBody"
+            }
+          }
+        }
+      }
+    },
+    "/tags": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Get tags",
+        "operationId": "get-tags",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.GetAllTagResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates new tag with metadata send",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Creates new tag",
+        "operationId": "create-tag",
+        "parameters": [
+          {
+            "description": "New tag",
+            "name": "new-tag",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.CreateTagRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Tag created",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.CreateTagResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/tags/{id}": {
+      "get": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Get tag by ID",
+        "operationId": "get-tag",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tag ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.Tag"
+            }
+          },
+          "404": {
+            "description": "Tag not found",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.EmptyBody"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "summary": "Delete tag by ID",
+        "operationId": "delete-tag",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Tag ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tag deleted"
+          },
+          "404": {
+            "description": "Tag not found",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "The given tag id does not belong to the user",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/model.ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "model.CreateTagRequest": {
+      "type": "object",
+      "properties": {
+        "Colour": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        }
+      }
+    },
+    "model.CreateTagResponse": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "string"
+        }
+      }
+    },
+    "model.EmptyBody": {
+      "type": "object"
+    },
+    "model.ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "Code": {
+          "type": "integer"
+        },
+        "Message": {
+          "type": "string"
+        }
+      }
+    },
+    "model.GetAllTagResponse": {
+      "type": "object",
+      "properties": {
+        "Tags": {
+          "type": "array"
+        }
+      }
+    },
+    "model.Tag": {
+      "type": "object",
+      "properties": {
+        "Colour": {
+          "type": "string"
+        },
+        "Id": {
+          "type": "string"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "AccountId": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

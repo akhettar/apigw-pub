@@ -1,0 +1,125 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This API is used to receive metadata about OCRs sent to Receipt Bank",
+    "version": "1.0",
+    "title": "Receipt Bank Callback API"
+  },
+  "host": "internal-api.dev.astoapp.co.uk",
+  "basePath": "/receipt-bank-processor/",
+  "tags": [
+    {
+      "name": "receipt-bank-callback-controller",
+      "description": "Receipt Bank Callback Controller"
+    }
+  ],
+  "paths": {
+    "/receiptbank/callback": {
+      "post": {
+        "tags": [
+          "receipt-bank-callback-controller"
+        ],
+        "summary": "Received ocr processing result from receipt bank",
+        "operationId": "callbackUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-Rb-Funnel-Api-Key",
+            "in": "header",
+            "description": "X-Rb-Funnel-Api-Key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CallbackRequest"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-asto-auth-disabled": "true",
+        "x-asto-publish": "true"
+      }
+    }
+  },
+  "definitions": {
+    "CallbackRequest": {
+      "type": "object",
+      "required": [
+        "uid"
+      ],
+      "properties": {
+        "currency": {
+          "type": "string",
+          "example": "GBP"
+        },
+        "tax_amount": {
+          "type": "string",
+          "example": 1.00
+        },
+        "total_amount": {
+          "type": "string",
+          "example": 10.00
+        },
+        "uid": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "supplier": {
+          "type": "string"
+        }
+      },
+      "title": "CallbackRequest"
+    },
+    "HttpExceptionResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "HttpExceptionResponse"
+    }
+  }
+}

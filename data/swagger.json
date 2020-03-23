@@ -1,0 +1,1043 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The Account API is used to manage account metadata",
+    "version": "1.0",
+    "title": "Account API"
+  },
+  "host": "internal-api.dev.astoapp.co.uk",
+  "basePath": "/account-service/",
+  "tags": [
+    {
+      "name": "account-controller",
+      "description": "Account Controller"
+    },
+    {
+      "name": "admin-account-controller",
+      "description": "Admin Account Controller"
+    },
+    {
+      "name": "organisation-controller",
+      "description": "Organisation Controller"
+    }
+  ],
+  "paths": {
+    "/accounts/{accountId}": {
+      "get": {
+        "tags": [
+          "account-controller"
+        ],
+        "summary": "Get account metadata",
+        "operationId": "getAccountUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-asto-publish": "true"
+      },
+      "put": {
+        "tags": [
+          "account-controller"
+        ],
+        "summary": "Update account metadata",
+        "operationId": "updateAccountUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "accountDto",
+            "description": "accountDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-asto-publish": "true"
+      },
+      "patch": {
+        "tags": [
+          "account-controller"
+        ],
+        "summary": "Patch account metadata",
+        "operationId": "patchAccountUsingPATCH",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "accountDto",
+            "description": "accountDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-asto-publish": "true"
+      }
+    },
+    "/accounts/{accountId}/contacts/email": {
+      "put": {
+        "tags": [
+          "account-controller"
+        ],
+        "summary": "Update contact email address",
+        "operationId": "updateAccountContactEmailUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "accountDto",
+            "description": "accountDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateContactEmailDto"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-asto-publish": "true"
+      }
+    },
+    "/accounts/{accountId}/status": {
+      "get": {
+        "tags": [
+          "account-controller"
+        ],
+        "summary": "Get account metadata status",
+        "operationId": "getAccountStatusUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ApplicantStatusDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-asto-publish": "true"
+      }
+    },
+    "/admin/accounts": {
+      "post": {
+        "tags": [
+          "admin-account-controller"
+        ],
+        "summary": "Create account with metadata",
+        "operationId": "createAccountUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "accountDto",
+            "description": "accountDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateAccountDto"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "409": {
+            "description": "Account already exists",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/admin/accounts/email/{email}": {
+      "get": {
+        "tags": [
+          "admin-account-controller"
+        ],
+        "summary": "Get account metadata by email",
+        "operationId": "getAccountByEmailUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "description": "email",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/admin/accounts/{accountId}": {
+      "get": {
+        "tags": [
+          "admin-account-controller"
+        ],
+        "summary": "Get account metadata",
+        "operationId": "getAccountUsingGET_1",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "admin-account-controller"
+        ],
+        "summary": "Delete account",
+        "operationId": "deleteAccountUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "patch": {
+        "tags": [
+          "admin-account-controller"
+        ],
+        "summary": "Patch account metadata",
+        "operationId": "patchAccountUsingPATCH_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "accountDto",
+            "description": "accountDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "path",
+            "description": "accountId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AccountDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/organisations/{orgId}": {
+      "get": {
+        "tags": [
+          "organisation-controller"
+        ],
+        "summary": "Gets Organisation metadata",
+        "operationId": "getOrganisationUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "description": "orgId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OrganisationDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Organisation not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-asto-publish": "true"
+      },
+      "put": {
+        "tags": [
+          "organisation-controller"
+        ],
+        "summary": "Update Organisation metadata",
+        "operationId": "updateOrganisationUsingPUT",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "orgId",
+            "in": "path",
+            "description": "orgId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "organisationDto",
+            "description": "organisationDto",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrganisationDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/OrganisationDto"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "404": {
+            "description": "Organisation not found",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/HttpExceptionResponse"
+            }
+          }
+        },
+        "deprecated": false,
+        "x-asto-publish": "true"
+      }
+    }
+  },
+  "definitions": {
+    "AccountDto": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/AddressDto"
+        },
+        "contactEmail": {
+          "type": "string",
+          "example": "string@test.com"
+        },
+        "countryCode": {
+          "type": "string",
+          "example": 44
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "example": "01-01-1970"
+        },
+        "email": {
+          "type": "string",
+          "example": "string@test.com"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "internationalMobileNumber": {
+          "type": "string",
+          "example": "+447514193197"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "legalAdviceSought": {
+          "type": "boolean"
+        },
+        "memberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MembershipDto"
+          }
+        },
+        "middleName": {
+          "type": "string"
+        },
+        "mobileNumber": {
+          "type": "string",
+          "example": 7514193197
+        },
+        "nationality": {
+          "type": "string",
+          "example": "GB"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "title": "AccountDto"
+    },
+    "AddressDto": {
+      "type": "object",
+      "properties": {
+        "apartmentName": {
+          "type": "string"
+        },
+        "buildingName": {
+          "type": "string"
+        },
+        "buildingNumber": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string",
+          "example": "GB"
+        },
+        "county": {
+          "type": "string"
+        },
+        "line1": {
+          "type": "string"
+        },
+        "line2": {
+          "type": "string"
+        },
+        "line3": {
+          "type": "string"
+        },
+        "postcode": {
+          "type": "string"
+        }
+      },
+      "title": "AddressDto"
+    },
+    "ApplicantStatusDto": {
+      "type": "object",
+      "properties": {
+        "blackListFlag": {
+          "type": "boolean"
+        },
+        "idvNumberOfFailures": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "idvReason": {
+          "type": "string"
+        },
+        "idvStatus": {
+          "type": "string"
+        },
+        "kybReason": {
+          "type": "string"
+        },
+        "kybStatus": {
+          "type": "string"
+        },
+        "kycReason": {
+          "type": "string"
+        },
+        "kycStatus": {
+          "type": "string"
+        },
+        "orgType": {
+          "$ref": "#/definitions/OrganisationType"
+        }
+      },
+      "title": "ApplicantStatusDto"
+    },
+    "CreateAccountDto": {
+      "type": "object",
+      "properties": {
+        "countryCode": {
+          "type": "string",
+          "example": 44
+        },
+        "email": {
+          "type": "string",
+          "example": "string@test.com"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "mobileNumber": {
+          "type": "string",
+          "example": 7514193197
+        }
+      },
+      "title": "CreateAccountDto"
+    },
+    "HttpExceptionResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "title": "HttpExceptionResponse"
+    },
+    "InvoicePaymentMethodInformationDTO": {
+      "type": "object",
+      "properties": {
+        "accountNumber": {
+          "type": "string"
+        },
+        "bankName": {
+          "type": "string"
+        },
+        "bic": {
+          "type": "string"
+        },
+        "iban": {
+          "type": "string"
+        },
+        "paypalAccount": {
+          "type": "string"
+        },
+        "sortCode": {
+          "type": "string"
+        }
+      },
+      "title": "InvoicePaymentMethodInformationDTO"
+    },
+    "MembershipDto": {
+      "type": "object",
+      "properties": {
+        "organisationId": {
+          "type": "string"
+        }
+      },
+      "title": "MembershipDto"
+    },
+    "OrganisationDto": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/AddressDto"
+        },
+        "averageCreditCardBalance": {
+          "type": "number"
+        },
+        "averageMonthlyOutgoings": {
+          "type": "number"
+        },
+        "companyNumber": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "invoicePaymentMethodInformation": {
+          "$ref": "#/definitions/InvoicePaymentMethodInformationDTO"
+        },
+        "listTradingCountries": {
+          "type": "string",
+          "example": "GB,FR"
+        },
+        "listTradingIndustries": {
+          "type": "string",
+          "example": "5001,6001"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "nextTurnover": {
+          "type": "number"
+        },
+        "orgId": {
+          "type": "string"
+        },
+        "orgType": {
+          "$ref": "#/definitions/OrganisationType"
+        },
+        "registeredName": {
+          "type": "string"
+        },
+        "totalOutstandingLoans": {
+          "type": "number"
+        },
+        "totalOverdraftBalance": {
+          "type": "number"
+        },
+        "tradeName": {
+          "type": "string"
+        },
+        "tradingAddress": {
+          "$ref": "#/definitions/AddressDto"
+        },
+        "tradingSince": {
+          "type": "string",
+          "example": "01-01-1970"
+        },
+        "turnover": {
+          "type": "number"
+        },
+        "vatInformation": {
+          "$ref": "#/definitions/VATInformationDto"
+        }
+      },
+      "title": "OrganisationDto"
+    },
+    "OrganisationType": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "OrganisationType"
+    },
+    "UpdateContactEmailDto": {
+      "type": "object",
+      "properties": {
+        "emailVerificationToken": {
+          "type": "string"
+        }
+      },
+      "title": "UpdateContactEmailDto"
+    },
+    "VATInformationDto": {
+      "type": "object",
+      "properties": {
+        "isRegistered": {
+          "type": "boolean"
+        },
+        "registrationNumber": {
+          "type": "string"
+        }
+      },
+      "title": "VATInformationDto"
+    }
+  }
+}

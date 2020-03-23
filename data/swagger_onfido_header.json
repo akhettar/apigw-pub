@@ -1,0 +1,281 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The User Identity Verification Service is used to call Onfido for ID verification check.",
+    "version": "1.0",
+    "title": "User Identity Verification Service"
+},
+"host": "internal-api.dev.astoapp.co.uk",
+"basePath": "/verification-service/",
+  "tags": [
+    {
+      "name": "admin-verification-controller",
+      "description": "Admin Verification Controller"
+    },
+    {
+        "name": "verification-controller",
+        "description": "Verification Controller"
+    }
+  ],
+  "paths": {
+    "/idcheck/callback": {
+      "post": {
+          "tags": [
+              "verification-controller"
+          ],
+          "summary": "ID verification check callback",
+          "operationId": "onfidoCallbackUsingPOST",
+          "consumes": [
+              "application/json"
+          ],
+          "produces": [
+              "*/*"
+          ],
+          "parameters": [
+              {
+                  "name": "X-Signature",
+                  "in": "header",
+                  "description": "Onfido Signature",
+                  "required": true,
+                  "type": "string"
+              },
+              {
+                  "in": "body",
+                  "name": "request",
+                  "description": "The onfido callback request",
+                  "required": false,
+                  "schema": {
+                      "$ref": "#/definitions/OnfidoCallbackResponseDTO"
+                  }
+              }
+          ],
+          "responses": {
+              "200": {
+                  "description": "OK",
+                  "schema": {
+                      "type": "string"
+                  }
+              },
+              "400": {
+                  "description": "Bad request",
+                  "schema": {
+                      "$ref": "#/definitions/HttpExceptionResponse"
+                  }
+              },
+              "401": {
+                  "description": "Signature authentication fail.",
+                  "schema": {
+                      "$ref": "#/definitions/HttpExceptionResponse"
+                  }
+              },
+              "404": {
+                  "description": "Data not found",
+                  "schema": {
+                      "$ref": "#/definitions/HttpExceptionResponse"
+                  }
+              },
+              "500": {
+                  "description": "Internal Server Error",
+                  "schema": {
+                      "$ref": "#/definitions/HttpExceptionResponse"
+                  }
+              }
+          },
+          "deprecated": false,
+          "x-asto-auth-disabled": "true",
+          "x-asto-publish": "true"
+      }
+    }
+  },
+  "definitions": {
+    "ApplicantTokenResponse": {
+        "type": "object",
+        "properties": {
+            "token": {
+                "type": "string"
+            }
+        },
+        "title": "ApplicantTokenResponse"
+    },
+    "CreateApplicantResponseDTO": {
+        "type": "object",
+        "properties": {
+            "applicantId": {
+                "type": "string"
+            }
+        },
+        "title": "CreateApplicantResponseDTO"
+    },
+    "CreateCheckResponseDTO": {
+        "type": "object",
+        "properties": {
+            "checkId": {
+                "type": "string"
+            }
+        },
+        "title": "CreateCheckResponseDTO"
+    },
+    "CreateNewCheckDTO": {
+        "type": "object",
+        "properties": {
+            "variant": {
+                "type": "string",
+                "example": "standard"
+            }
+        },
+        "title": "CreateNewCheckDTO"
+    },
+    "GetVerificationDataDTO": {
+        "type": "object",
+        "properties": {
+            "applicantId": {
+                "type": "string"
+            },
+            "checkId": {
+                "type": "string"
+            },
+            "createdDate": {
+                "type": "string"
+            },
+            "firstName": {
+                "type": "string"
+            },
+            "id": {
+                "type": "string",
+                "format": "uuid"
+            },
+            "lastName": {
+                "type": "string"
+            },
+            "status": {
+                "type": "string"
+            }
+        },
+        "title": "GetVerificationDataDTO"
+    },
+    "GetVerificationResultsDTO": {
+        "type": "object",
+        "properties": {
+            "createdDate": {
+                "$ref": "#/definitions/Timestamp"
+            },
+            "payload": {
+                "type": "string"
+            },
+            "reportStatus": {
+                "type": "string"
+            },
+            "reportType": {
+                "type": "string"
+            },
+            "reportid": {
+                "type": "string"
+            }
+        },
+        "title": "GetVerificationResultsDTO"
+    },
+    "HttpExceptionResponse": {
+        "type": "object",
+        "properties": {
+            "errors": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "message": {
+                "type": "string"
+            }
+        },
+        "title": "HttpExceptionResponse"
+    },
+    "OnfidoCallbackPayloadBodyVO": {
+        "type": "object",
+        "properties": {
+            "completed_at": {
+                "type": "string"
+            },
+            "href": {
+                "type": "string"
+            },
+            "id": {
+                "type": "string"
+            },
+            "status": {
+                "type": "string"
+            }
+        },
+        "title": "OnfidoCallbackPayloadBodyVO"
+    },
+    "OnfidoCallbackPayloadVO": {
+        "type": "object",
+        "properties": {
+            "action": {
+                "type": "string"
+            },
+            "object": {
+                "$ref": "#/definitions/OnfidoCallbackPayloadBodyVO"
+            },
+            "resource_type": {
+                "type": "string"
+            }
+        },
+        "title": "OnfidoCallbackPayloadVO"
+    },
+    "OnfidoCallbackResponseDTO": {
+        "type": "object",
+        "properties": {
+            "payload": {
+                "$ref": "#/definitions/OnfidoCallbackPayloadVO"
+            }
+        },
+        "title": "OnfidoCallbackResponseDTO"
+    },
+    "Timestamp": {
+        "type": "object",
+        "properties": {
+            "date": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "day": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "hours": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "minutes": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "month": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "nanos": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "seconds": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "time": {
+                "type": "integer",
+                "format": "int64"
+            },
+            "timezoneOffset": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "year": {
+                "type": "integer",
+                "format": "int32"
+            }
+        },
+        "title": "Timestamp"
+    }
+}
+}
