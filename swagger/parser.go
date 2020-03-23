@@ -157,6 +157,7 @@ func buildOAuthBlock() swg.SecurityDefinitions {
 
 	secWith := utils.FetchEnvVar(AuthName, "wave-api-gw-dev")
 	return map[string]*swg.SecurityScheme{
+
 		secWith: {
 			SecuritySchemeProps: swg.SecuritySchemeProps{
 				Type: "oauth2",

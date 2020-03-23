@@ -52,16 +52,16 @@ These are the environment variables required for this tool. By default, the tool
 
 1. Running the publisher with `public (http)` connection type
 
-docker run --env API_GATEWAY_NAME=wave-api-gw-dev \
+docker run --env API_GATEWAY_NAME=api-gw-dev \
 --env CONNECTION_TYPE=VPC_LINK \
 --env AUTH_URL=arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:762587740553:function:api-gateway-authorizer-dev-auth/invocations \
---env AUTH_NAME=wave-api-gw-dev \
+--env AUTH_NAME=api-gw-dev \
 --env AUTH_TYPE=apiKey \
 --env API_GATEWAY_ID=nildadqvqg \
 --env STAGE_NAME=v1 \
---env ASSUME_ROLE=arn:aws:iam::762587740553:role/apigw-role \
---env AWS_ACCESS_KEY_ID=AKIA3DDOFPGERFDLJCYL \
---env AWS_SECRET_ACCESS_KEY=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 apigw/publisher /bin/aws-apigw-publisher
+--env ASSUME_ROLE=arn:aws:iam::74***87740553:role/apigw-role \
+--env AWS_ACCESS_KEY_ID=AKIA3DDOFPG****CYL \
+--env AWS_SECRET_ACCESS_KEY=8uT/29******* apigw/publisher /bin/aws-apigw-publisher
  
 2. Running the publisher `vpc link` connection type
 
@@ -73,9 +73,12 @@ docker run --env API_GATEWAY_NAME=wave-api-gw-dev \
 --env AUTH_TYPE=apiKey \
 --env API_GATEWAY_ID=nildadqvqg \
 --env STAGE_NAME=v1 \
---env ASSUME_ROLE=arn:aws:iam::762587740553:role/apigw-role \
---env AWS_ACCESS_KEY_ID=AKIA3DDOFPGERFDLJCYL \
---env AWS_SECRET_ACCESS_KEY=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 apigw/publisher /bin/aws-apigw-publisher 
+--env API_GATEWAY_ID=nildadqvqg \
+--env STAGE_NAME=v1 \
+--env ASSUME_ROLE=arn:aws:iam::74***87740553:role/apigw-role \
+--env AWS_ACCESS_KEY_ID=AKIA3DDOFPG****CYL \
+--env AWS_SECRET_ACCESS_KEY=8uT/29******* apigw/publisher /bin/aws-apigw-publisher
+
 
 
 ## Authorization schemes
