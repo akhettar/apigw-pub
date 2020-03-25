@@ -5,7 +5,7 @@
     "version": "1.0",
     "title": "Receipt Bank Callback API"
   },
-  "host": "internal-api.dev.astoapp.co.uk",
+  "host": "internal-api.dev.co.uk",
   "basePath": "/receipt-bank-processor/",
   "tags": [
     {
@@ -69,8 +69,8 @@
           }
         },
         "deprecated": false,
-        "x-asto-auth-disabled": "true",
-        "x-asto-publish": "true"
+        "x-auth-disabled": "true",
+        "x-publish": "true"
       }
     }
   },

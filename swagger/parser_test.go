@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 	"testing"
@@ -53,7 +55,7 @@ func TestSwaggerClient_RenderSwaggerShouldReplaceProuceAllStarWithApplicationJso
 			decoder.Decode(&data)
 
 			// swagger client
-			client := NewSwaggerClient("account-service")
+			client := NewSwaggerClient("url")
 
 			// render the swagger
 			renderSwagger, _ := client.RenderSwagger(data)
@@ -112,6 +114,7 @@ func TestSwaggerClient_RenderSwaggerMustAddAWSExtensions(t *testing.T) {
 				t.Errorf("\t\tRendered swagger must have aws extensions %v", BallotX)
 			}
 
+			logrus.Info(string(renderSwagger))
 			if strings.Contains(string(renderSwagger), ExpectedAuthorizerArn) {
 				t.Logf("\t\tRendered swagger must have the correct Authorizer Arn set  %v", CheckMark)
 			} else {
@@ -128,7 +131,7 @@ func TestSwaggerClient_RenderSwaggerMustAddAWSExtensions(t *testing.T) {
 	}
 }
 
-func TestIsPathVisible_OnlyReturnTrueForExplicitlyPublishedPaths(t *testing.T) {
+func TestIsPathVisible_ReturnTrueForExplicitlyPublishedPathsAndNoExplicitlyPublished(t *testing.T) {
 
 	t.Logf("Given we read swagger from the deployed account service")
 	{
@@ -146,8 +149,8 @@ func TestIsPathVisible_OnlyReturnTrueForExplicitlyPublishedPaths(t *testing.T) {
 				"/accounts/{accountId}":                true,
 				"/accounts/{accountId}/contacts/email": true,
 				"/accounts/{accountId}/status":         true,
-				"/admin/accounts":                      false,
-				"/admin/accounts/email/{email}":        false,
+				"/admin/accounts":                      true,
+				"/admin/accounts/email/{email}":        true,
 				"/admin/accounts/{accountId}":          false,
 			}
 
@@ -165,52 +168,6 @@ func TestIsPathVisible_OnlyReturnTrueForExplicitlyPublishedPaths(t *testing.T) {
 
 		}
 	}
-}
-
-func TestSwaggerClient_OnlyReturnTrueForExplicitlyPublishedPaths(t *testing.T) {
-
-	t.Logf("Given we read swagger from the deployed account service")
-	{
-		t.Logf("\tWhen calling Render method, it should only return true when it's an explicitly published path")
-		{
-			// read vanilla swagger doc
-			var data swg.Swagger
-			swagger, _ := ioutil.ReadFile("../data/swagger.json")
-
-			decoder := json.NewDecoder(bytes.NewReader(swagger))
-			decoder.Decode(&data)
-
-			var expectedPathVisibilityResults = map[string]bool{
-				"/organisations/{orgId}":               true,
-				"/accounts/{accountId}":                true,
-				"/accounts/{accountId}/contacts/email": true,
-				"/accounts/{accountId}/status":         true,
-				"/admin/accounts":                      false,
-				"/admin/accounts/email/{email}":        false,
-				"/admin/accounts/{accountId}":          false,
-			}
-
-			client := NewSwaggerClient("account-service")
-			renderSwagger, _ := client.RenderSwagger(data)
-
-			var dataResult swg.Swagger
-			decoderResult := json.NewDecoder(bytes.NewReader(renderSwagger))
-			decoderResult.Decode(&dataResult)
-
-			for key := range dataResult.Paths.Paths {
-				if _, ok := expectedPathVisibilityResults[key]; !ok {
-					t.Errorf("Unexpected path found (%s), not found in result table", key)
-					continue
-				}
-
-				if !expectedPathVisibilityResults[key] {
-					t.Errorf("Path (%s) is published and shouldn't be!", key)
-				}
-			}
-
-		}
-	}
-
 }
 
 func TestSwaggerClient_RenderSwaggerShouldRemoveAllExamplesTag(t *testing.T) {
@@ -291,6 +248,8 @@ func TestSwaggerClient_RenderSwaggerShouldRenameNonAplphanumericEntityModel(t *t
 func TestAddCORSSupport(t *testing.T) {
 	t.Run("Should add an options operation to every endpoint", func(t *testing.T) {
 		// read vanilla swagger doc
+
+		os.Setenv(ApiGwName, "api-gw-dev")
 		var data swg.Swagger
 		swagger, _ := ioutil.ReadFile("../data/swagger.json")
 

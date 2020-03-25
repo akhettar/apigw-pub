@@ -5,7 +5,7 @@
     "version": "1.0",
     "title": "User Identity Verification Service"
 },
-"host": "internal-api.dev.astoapp.co.uk",
+"host": "internal-api.dev.co.uk",
 "basePath": "/verification-service/",
   "tags": [
     {
@@ -82,8 +82,8 @@
               }
           },
           "deprecated": false,
-          "x-asto-auth-disabled": "true",
-          "x-asto-publish": "true"
+          "x-auth-disabled": "true",
+          "x-publish": "true"
       }
     }
   },

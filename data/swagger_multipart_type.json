@@ -5,7 +5,7 @@
     "version":"1.0",
     "title":"OCR Service"
   },
-  "host":"internal-api.dev.astoapp.co.uk",
+  "host":"internal-api.dev.co.uk",
   "basePath":"/ocr-api-service/",
   "tags":[
     {
@@ -106,7 +106,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       },
       "post":{
         "tags":[
@@ -178,7 +178,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       }
     },
     "/ocrs/currencies":{
@@ -212,7 +212,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       }
     },
     "/ocrs/export":{
@@ -298,7 +298,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       }
     },
     "/ocrs/total":{
@@ -356,7 +356,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       }
     },
     "/ocrs/{ocrId}":{
@@ -405,7 +405,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       },
       "delete":{
         "tags":[
@@ -458,7 +458,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       }
     },
     "/ocrs/{ocrId}/data":{
@@ -531,7 +531,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       }
     },
     "/ocrs/{ocrId}/file":{
@@ -581,7 +581,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       }
     },
     "/ocrs/{ocrId}/tags":{
@@ -648,7 +648,7 @@
           }
         },
         "deprecated":false,
-        "x-asto-publish":"true"
+        "x-publish":"true"
       }
     }
   },

@@ -12,7 +12,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws/endpoints"
 	swg "github.com/go-openapi/spec"
 	log "github.com/sirupsen/logrus"
 )
@@ -20,14 +19,10 @@ import (
 var DEFAULT_JSON_MIME_TYPE = []string{"application/json"}
 
 const (
-	DefaultEnv           = "dev"
-	EnvVariableKEY       = "ENVIRONMENT"
 	PublicConnectionType = "PUBLIC"
 	ConnectionType       = "CONNECTION_TYPE"
 	VPCLinkID            = "VPC_LINK_ID"
-	AssumeRoleKey        = "ASSUME_ROLE"
 	GoModelRegex         = "(model.)(.*)"
-	AssumeRoleRegex      = "(.*)(::)(\\d*)(.*)"
 	AuthType             = "AUTH_TYPE"
 	AuthUrl              = "AUTH_URL"
 	AuthName             = "AUTH_NAME"
@@ -35,6 +30,8 @@ const (
 	CustomAuth           = "apiKey"
 	OAuth2               = "oauth2"
 	EndpointUrl          = "ENDPOINT_URL"
+	CorsEnabled          = "CORS_ENABLED"
+	CustomHeaders        = "CUSTOM_HEADERS"
 )
 
 var alphaNumRegexp *regexp.Regexp
@@ -51,47 +48,76 @@ func init() {
 // 2. Apply filters such as removing `example` tag and some unsupported feature of OpenAPI by AWS REST API Gateway restrictions
 // 3. Add AWS API Gateway integration extensions to the vanilla swagger doc
 type SwaggerParser struct {
-	ServiceName string
+	swaggerUrl string
 }
 
 // NewSwaggerClient - Function
-func NewSwaggerClient(servicename string) SwaggerParser {
-	return SwaggerParser{ServiceName: servicename}
+func NewSwaggerClient(swaggerUrl string) SwaggerParser {
+	return SwaggerParser{swaggerUrl: swaggerUrl}
+}
+
+// FetchSwagger - Function
+// Fetches Swagger for a given service from the its deployed environment
+func (client SwaggerParser) FetchSwagger() (swg.Swagger, error) {
+
+	log.WithFields(log.Fields{"Swagger URL": client.swaggerUrl}).Info("Fetching vanilla swagger from the given swagger url")
+
+	resp, err := http.Get(client.swaggerUrl)
+	if err != nil {
+		log.Errorf("Error when getting Swagger docs: %s", err)
+	}
+
+	defer resp.Body.Close()
+
+	var data swg.Swagger
+
+	if err != nil {
+		log.Errorf("Failed to fetch swagger doc from %s", client.swaggerUrl)
+		return data, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		log.Errorf("Got error from the server with http code %d", resp.StatusCode)
+		return data, fmt.Errorf("Got error from the server with http code %d", resp.StatusCode)
+	}
+
+	// parsing the swagger doc
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(&data)
+	return data, err
 }
 
 // RenderSwagger - Function
 // Renders the vanilla swagger document into one that can be published to AWS api gateway
-func (client SwaggerParser) RenderSwagger(data swg.Swagger) ([]byte, error) {
+func (client SwaggerParser) RenderSwagger(doc swg.Swagger) ([]byte, error) {
 
-	endpointUrl := utils.FetchEnvVar(EndpointUrl, fmt.Sprintf("%s%s", data.Host, data.BasePath))
+	endpointUrl := utils.FetchEnvVar(EndpointUrl, fmt.Sprintf("%s%s", doc.Host, doc.BasePath))
 
 	swaggerWithExtensions := swg.Swagger{
-		SwaggerProps: data.SwaggerProps,
+		SwaggerProps: doc.SwaggerProps,
 	}
 
 	// Setting the swagger Tile to that of the asto api gateway to avoid the overriding of the api gateway name by the REST API import call
-	swaggerWithExtensions.Info.Title = os.Getenv(ApiGwName)
+	swaggerWithExtensions.Info.Title = utils.RetrieveEnvVar(ApiGwName)
+	for key, value := range doc.Paths.Paths {
+		if isPathVisible(value) {
+			log.WithFields(log.Fields{"key": key}).Info(" Publishing ✅")
+		} else {
+			log.WithFields(log.Fields{"key": key}).Info(" Skipping Publish ❌")
+			delete(swaggerWithExtensions.Paths.Paths, key)
+		}
+	}
 
-	//for key, value := range data.Paths.Paths {
-	//	if isPathVisible(value) {
-	//		log.WithFields(log.Fields{"key": key}).Info(" Publishing ✅")
-	//	} else {
-	//		log.WithFields(log.Fields{"key": key}).Info(" Skipping Publish ❌")
-	//		delete(swaggerWithExtensions.Paths.Paths, key)
-	//	}
-	//}
-
-	if os.Getenv(AuthType) == CustomAuth {
+	// Add custom authorization if set
+	if strings.ToLower(os.Getenv(AuthType)) == strings.ToLower(CustomAuth) {
 		swaggerWithExtensions.SecurityDefinitions = buildCustomAuthorizerBlock()
-	} else if os.Getenv(AuthType) == OAuth2 {
-		swaggerWithExtensions.SecurityDefinitions = buildOAuthBlock()
 	}
 
 	// Apply filters
 	applyFilters(&swaggerWithExtensions)
 
 	// adding aws extension for all the defined operations for a given endpoint
-	for key, path := range data.Paths.Paths {
+	for key, path := range doc.Paths.Paths {
 		if path.Get != nil {
 			addAWSExtensions(path.Get, key, http.MethodGet, endpointUrl, isSecurityEnabled(path))
 			addOperationCORSHeaders(path.Get)
@@ -122,65 +148,21 @@ func (client SwaggerParser) RenderSwagger(data swg.Swagger) ([]byte, error) {
 			renameNonAlphanumericReference(path.Post)
 		}
 
-		pathPointer := data.Paths.Paths[key]
-
-		pathPointer.Options = swg.NewOperation("add_cors")
-		addOptionsCORSSupport(pathPointer.Options, key, http.MethodOptions, client.ServiceName)
-
-		data.Paths.Paths[key] = pathPointer
+		// cors enabled?
+		_, corsEnabled := os.LookupEnv(CorsEnabled)
+		if corsEnabled {
+			pathPointer := doc.Paths.Paths[key]
+			pathPointer.Options = swg.NewOperation("add_cors")
+			addOptionsCORSSupport(pathPointer.Options, key, http.MethodOptions)
+			doc.Paths.Paths[key] = pathPointer
+		}
 	}
-
 	json, err := swaggerWithExtensions.MarshalJSON()
-	log.Debug("rendered swagger: ", string(json))
-
 	return json, err
 }
 
-func buildOAuthBlock() swg.SecurityDefinitions {
-
-	//	"securitySchemes": {
-	//		"jwt-authorizer-oauth": {
-	//			"type": "oauth2",
-	//				"x-amazon-apigateway-authorizer": {
-	//				"type": "jwt",
-	//					"jwtConfiguration": {
-	//					"issuer": "https://cognito-idp.region.amazonaws.com/userPoolId",
-	//						"audience": [
-	//						"audience1",
-	//						"audience2"
-	//]
-	//	},
-	//	"identitySource": "$request.header.Authorization"
-	//	}
-	//	}
-	//	}
-
-	secWith := utils.FetchEnvVar(AuthName, "wave-api-gw-dev")
-	return map[string]*swg.SecurityScheme{
-
-		secWith: {
-			SecuritySchemeProps: swg.SecuritySchemeProps{
-				Type: "oauth2",
-				Name: "Authorization",
-				In:   "header",
-			},
-			VendorExtensible: swg.VendorExtensible{
-				Extensions: map[string]interface{}{
-					"x-amazon-apigateway-authtype": "custom",
-					"x-amazon-apigateway-authorizer": map[string]interface{}{
-						"authorizerUri":                utils.RetrieveEnvVar(AuthUrl),
-						"authorizerResultTtlInSeconds": 0,
-						"type":                         "token",
-					},
-				},
-			},
-		},
-	}
-}
-
 func buildCustomAuthorizerBlock() map[string]*swg.SecurityScheme {
-
-	secWith := utils.FetchEnvVar(AuthName, "wave-api-gw-dev")
+	secWith := utils.RetrieveEnvVar(AuthName)
 	return map[string]*swg.SecurityScheme{
 		secWith: {SecuritySchemeProps: swg.SecuritySchemeProps{
 			Type: "apiKey",
@@ -199,17 +181,6 @@ func buildCustomAuthorizerBlock() map[string]*swg.SecurityScheme {
 			},
 		},
 	}
-}
-
-func buildAuthorizerArn() string {
-	env := utils.FetchEnvVar(EnvVariableKEY, DefaultEnv)
-	assumeRole := utils.FetchEnvVar(AssumeRoleKey, "DefaultAssumeRole")
-	compile, _ := regexp.Compile(AssumeRoleRegex)
-	awsAccount := compile.FindAllStringSubmatch(assumeRole, -1)[0][3]
-	arn := fmt.Sprintf("arn:aws:apigateway:%s:lambda:path/2015-03-31/functions/arn:aws:lambda:%s:%s:function:api-gateway-authorizer-%s-auth/invocations",
-		endpoints.EuWest1RegionID, endpoints.EuWest1RegionID, awsAccount, env)
-	log.WithFields(log.Fields{"AuhorizerArn": arn}).Info(arn)
-	return arn
 }
 
 func renameNonAlphanumericReference(operation *swg.Operation) {
@@ -232,40 +203,6 @@ func renameNonAlphanumericReference(operation *swg.Operation) {
 	}
 }
 
-// FetchSwagger - Function
-// Fetches Swagger for a given service from the its deployed environment - http://internal-api.dev.astoapp.co.uk/account-service/v2/api-docs
-func (client SwaggerParser) FetchSwagger() (swg.Swagger, error) {
-	//url := fmt.Sprintf("https://raw.githubusercontent.com/swagger-api/swagger-spec/master/examples/v2.0/json/petstore-expanded.json",
-	//	utils.FetchEnvVar(EnvVariableKEY, DefaultEnv), client.ServiceName)
-
-	url := "https://raw.githubusercontent.com/swagger-api/swagger-spec/master/examples/v2.0/json/petstore-expanded.json"
-	log.WithFields(log.Fields{"Service name": client.ServiceName, "url": url}).Info("Fetching vanilla swagger for service")
-
-	resp, err := http.Get(url)
-	if err != nil {
-		log.Errorf("Error when getting Swagger docs: %s", err)
-	}
-
-	defer resp.Body.Close()
-
-	var data swg.Swagger
-
-	if err != nil {
-		log.Errorf("Failed to fetch swagger doc from %s", url)
-		return data, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		log.Errorf("Got error from the server with http code %d", resp.StatusCode)
-		return data, fmt.Errorf("Got error from the server with http code %d", resp.StatusCode)
-	}
-
-	// parsing the swagger doc
-	decoder := json.NewDecoder(resp.Body)
-	err = decoder.Decode(&data)
-	return data, err
-}
-
 // Adds Swagger Extensions
 func addAWSExtensions(op *swg.Operation, key string, method string, endpointUrl string, securityEnabled bool) {
 	requestParams := make(map[string]string)
@@ -284,14 +221,22 @@ func addAWSExtensions(op *swg.Operation, key string, method string, endpointUrl 
 		}
 	}
 
-	// add all the headers
-	addHeaderParameter(op, "organisation-id", "header", true, "Organisation ID")
+	// set all the headers
+	customHeaders, ok := os.LookupEnv(CustomHeaders)
+	if ok {
+		for _, header := range strings.Split(customHeaders, ",") {
+			name := strings.TrimSpace(header)
+			addHeaderParameter(op, name, "header", true, name)
+			requestParams[fmt.Sprintf("integration.request.header.%s", name)] =
+				fmt.Sprintf("method.request.header.%s", name)
+		}
+	}
+
+	// set default headers
 	addHeaderParameter(op, "content-type", "header", false, "content type")
 	addHeaderParameter(op, "accept", "header", false, "accept")
 
 	// set all the request parameters
-	requestParams["integration.request.header.X-JWT-Assertion"] = "context.authorizer.stringKey"
-	requestParams["integration.request.header.organisation-id"] = "method.request.header.organisation-id"
 	requestParams["integration.request.header.accept"] = "method.request.header.accept"
 	requestParams["integration.request.header.content-type"] = "method.request.header.content-type"
 
@@ -313,7 +258,7 @@ func addAWSExtensions(op *swg.Operation, key string, method string, endpointUrl 
 	extension := model.AWSAPIGatewayIntegration{
 		ConnectionType:      strings.ToUpper(utils.FetchEnvVar(ConnectionType, PublicConnectionType)),
 		URI:                 fmt.Sprintf("http://%s%s", endpointUrl, key),
-		ConnectionID:        utils.RetrieveEnvVar(VPCLinkID),
+		ConnectionID:        utils.FetchEnvVar(VPCLinkID, ""),
 		HTTPMethod:          method,
 		IntegrationType:     "http",
 		PassthroughBehavior: "when_no_templates",
@@ -325,7 +270,7 @@ func addAWSExtensions(op *swg.Operation, key string, method string, endpointUrl 
 	item.VendorExtensible.AddExtension("x-amazon-apigateway-integration", extension)
 
 	if securityEnabled {
-		item.SecuredWith(os.Getenv(AuthName))
+		item.SecuredWith(utils.RetrieveEnvVar(AuthName))
 	} else {
 		log.WithFields(log.Fields{
 			"Endpoint": key,
@@ -351,12 +296,11 @@ func addOperationCORSHeaders(op *swg.Operation) {
 		response.ResponseProps = swg.ResponseProps{
 			Headers: corsHeader,
 		}
-
 		op.OperationProps.Responses.ResponsesProps.StatusCodeResponses[key] = response
 	}
 }
 
-func addOptionsCORSSupport(op *swg.Operation, key, method, servicename string) {
+func addOptionsCORSSupport(op *swg.Operation, key, method string) {
 	log.WithFields(log.Fields{"URL": key}).Info("Adding CORS Support to endpoint")
 
 	op.OperationProps = swg.OperationProps{
@@ -470,57 +414,43 @@ func removeTagExample(props *swg.SchemaProps) {
 }
 
 func isPathVisible(path swg.PathItem) bool {
-
 	values := reflect.ValueOf(path.PathItemProps)
-
 	num := values.NumField()
-
 	for i := 0; i < num; i++ {
-
 		if values.Field(i).IsNil() {
 			continue
 		}
-
 		value := values.Field(i).Interface().(*swg.Operation)
-		str, ok := value.Extensions.GetString("x-asto-publish")
+		str, ok := value.Extensions.GetString("x-publish")
 
 		if !ok {
-			return false
-		}
-
-		getBool, err := strconv.ParseBool(str)
-		if err == nil && getBool {
 			return true
 		}
-
+		getBool, err := strconv.ParseBool(str)
+		if err == nil {
+			return getBool
+		}
 	}
-
 	return true
 }
 
 func isSecurityEnabled(path swg.PathItem) bool {
-
 	values := reflect.ValueOf(path.PathItemProps)
-
 	num := values.NumField()
-
 	for i := 0; i < num; i++ {
-
 		if values.Field(i).IsNil() {
 			continue
 		}
-
 		value := values.Field(i).Interface().(*swg.Operation)
-		str, ok := value.Extensions.GetString("x-asto-auth-disabled")
+		str, ok := value.Extensions.GetString("x-auth-disabled")
 		if !ok {
 			return true
 		}
 
 		getBool, err := strconv.ParseBool(str)
-		if err == nil && getBool {
-			return false
+		if err == nil {
+			return getBool
 		}
-
 	}
 	return true
 }

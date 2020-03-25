@@ -44,6 +44,7 @@ func NewAPIGatewayClient() APIGatewayClient {
 
 // ImportSwagger imports the swagger doc into API Gateway
 func (cl APIGatewayClient) ImportSwagger(swaggerDoc []byte, apigwId string) (*apigateway.RestApi, error) {
+
 	log.WithFields(log.Fields{"API Gateway": apigwId}).Info("Importing swagger")
 	put := apigateway.PutRestApiInput{RestApiId: &apigwId, Body: swaggerDoc}
 	return cl.apigw.PutRestApi(&put)

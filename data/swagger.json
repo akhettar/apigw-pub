@@ -5,7 +5,7 @@
     "version": "1.0",
     "title": "Account API"
   },
-  "host": "internal-api.dev.astoapp.co.uk",
+  "host": "internal-api.dev.co.uk",
   "basePath": "/account-service/",
   "tags": [
     {
@@ -74,7 +74,7 @@
           }
         },
         "deprecated": false,
-        "x-asto-publish": "true"
+        "x-publish": "true"
       },
       "put": {
         "tags": [
@@ -139,7 +139,7 @@
           }
         },
         "deprecated": false,
-        "x-asto-publish": "true"
+        "x-publish": "true"
       },
       "patch": {
         "tags": [
@@ -204,7 +204,7 @@
           }
         },
         "deprecated": false,
-        "x-asto-publish": "true"
+        "x-publish": "true"
       }
     },
     "/accounts/{accountId}/contacts/email": {
@@ -271,7 +271,7 @@
           }
         },
         "deprecated": false,
-        "x-asto-publish": "true"
+        "x-publish": "true"
       }
     },
     "/accounts/{accountId}/status": {
@@ -326,7 +326,7 @@
           }
         },
         "deprecated": false,
-        "x-asto-publish": "true"
+        "x-publish": "true"
       }
     },
     "/admin/accounts": {
@@ -493,7 +493,8 @@
             }
           }
         },
-        "deprecated": false
+        "deprecated": false,
+        "x-publish": "false"
       },
       "delete": {
         "tags": [
@@ -659,7 +660,7 @@
           }
         },
         "deprecated": false,
-        "x-asto-publish": "true"
+        "x-publish": "true"
       },
       "put": {
         "tags": [
@@ -724,7 +725,7 @@
           }
         },
         "deprecated": false,
-        "x-asto-publish": "true"
+        "x-publish": "true"
       }
     }
   },

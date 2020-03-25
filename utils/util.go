@@ -23,7 +23,7 @@ func RetrieveEnvVar(key string) string {
 		return value
 	}
 	log.WithFields(log.Fields{
-		"environment variable key": key,
-	}).Warn("Failed to retrieve environment variable")
+		"Environment variable": key,
+	}).Fatal("Failed to retrieve required environment variable")
 	return ""
 }

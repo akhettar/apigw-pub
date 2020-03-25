@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/akhettar/aws-apigw-publisher/apigw"
 	"github.com/akhettar/aws-apigw-publisher/swagger"
 	"github.com/akhettar/aws-apigw-publisher/utils"
@@ -12,7 +11,7 @@ import (
 const (
 	StageNameVarKey = "STAGE_NAME"
 	APIGatewayIDKey = "API_GATEWAY_ID"
-	ServiceName     = "SERVICE_NAME"
+	SwaggerUrl      = "SWAGGER_URL"
 )
 
 func init() {
@@ -31,47 +30,32 @@ func init() {
 
 func main() {
 
-	// the service name should be given as env variable
-	servicename := utils.FetchEnvVar(ServiceName, "pet-store")
-
-	log.WithFields(log.Fields{"Service name": servicename}).Info("Starting Swagger import and deployment for")
-
-	// Fetching and rendering swagger
-	client := swagger.NewSwaggerClient(servicename)
-	swaggerDoc, err := client.FetchSwagger()
-
-	if err != nil {
-		log.WithFields(log.Fields{"error": err}).Fatalf("Failed to fetch or render the swagger doc")
-	}
-
 	// render the swagger - remove unsupported features by aws and add aws extensions
-	renderedSwag, err := client.RenderSwagger(swaggerDoc)
-
+	client := swagger.NewSwaggerClient(utils.RetrieveEnvVar(SwaggerUrl))
+	doc, err := client.FetchSwagger()
 	if err != nil {
-		log.Errorln("Failed to render the swagger doc")
-		log.Panic(err)
+		log.WithFields(log.Fields{"Swagger Url": utils.RetrieveEnvVar(SwaggerUrl)}).Fatal("Failed to retrieve swagger document")
+	}
+	renderedSwag, err := client.RenderSwagger(doc)
+	if err != nil {
+		log.WithFields(log.Fields{"Error": err}).Fatal("Failed to render swagger document")
 	}
 
 	// Import swagger
 	apigwClient := apigw.NewAPIGatewayClient()
-	api, err := apigwClient.ImportSwagger(renderedSwag, os.Getenv(APIGatewayIDKey))
+	report, err := apigwClient.ImportSwagger(renderedSwag, utils.RetrieveEnvVar(APIGatewayIDKey))
 
 	if err != nil {
-		log.WithFields(log.Fields{}).Errorf("Failed to publish the swagger doc")
-		log.Panic(err)
+		log.WithFields(log.Fields{"error": err}).Fatal("Failed to publish the swagger doc")
 	}
-	prettyJSON, err := json.MarshalIndent(api, "", "         ")
-	if err != nil {
-		log.Fatal("Failed to generate json", err)
-	}
-	log.Info(string(prettyJSON))
+	log.Info(report)
 
 	// Deploy API
-	deployment, err := apigwClient.CreateDeployment(os.Getenv(StageNameVarKey), os.Getenv(APIGatewayIDKey))
+	deployment, err := apigwClient.CreateDeployment(utils.RetrieveEnvVar(StageNameVarKey),
+		utils.RetrieveEnvVar(APIGatewayIDKey))
 	log.Info(deployment)
 	if err != nil {
-		log.Errorf("Failed to deploy the newly created resources  ❌")
-		log.Panic(err)
+		log.WithFields(log.Fields{"Error": err}).Fatal("Failed to deploy the newly created resources  ❌")
 	}
-	log.WithFields(log.Fields{"Service name": servicename}).Info("Swagger import and deployment has been successfully completed ✅")
+	log.Info("Swagger import and deployment is successfully completed ✅")
 }
