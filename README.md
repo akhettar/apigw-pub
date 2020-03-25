@@ -1,4 +1,7 @@
+
 # Swagger Publisher
+
+![Work in progress](pushing-cart.png)
 
 This tool publishes REST API into API Gateway. This tool is packed as a docker container and can be run in a `ci pipeline` after a given service
 is deployed to the target environment. This tool fetches the swagger document from a given `url`, render it by adding all the required AWS extensions
