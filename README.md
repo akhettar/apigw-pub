@@ -1,5 +1,5 @@
 
-# Swagger Publisher
+# AWS Swagger Publisher
 
 ![Work in progress](pushing-cart.png)
 
