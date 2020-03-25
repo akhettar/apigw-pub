@@ -432,7 +432,7 @@ func TestContentTypeTemplate_ParserShouldLookForConsumeTypeToSetTheCorrectConten
 			decoder := json.NewDecoder(bytes.NewReader(swagger))
 			decoder.Decode(&data)
 
-			client := NewSwaggerClient("ocr-api-service")
+			client := NewSwaggerClient("https://raw.githubusercontent.com/swagger-api/swagger-spec/master/examples/v2.0/json/petstore-expanded.json")
 			renderSwagger, _ := client.RenderSwagger(data)
 
 			fmt.Println(string(renderSwagger))
@@ -443,28 +443,19 @@ func TestContentTypeTemplate_ParserShouldLookForConsumeTypeToSetTheCorrectConten
 
 			pathItem := dataResult.Paths.Paths["/ocrs"]
 
-			postOperation := pathItem.Post
 			getOperation := pathItem.Get
 
 			// Post
-			authHeader := getRequestParameterValue(postOperation, "integration.request.header.X-JWT-Assertion")
-			orgIdPosHeader := getRequestParameterValue(getOperation, "integration.request.header.organisation-id")
 			contentTypePostHeader := getRequestParameterValue(getOperation, "integration.request.header.content-type")
 			acceptPostHeader := getRequestParameterValue(getOperation, "integration.request.header.accept")
 
-			assertHeader(authHeader, "context.authorizer.stringKey", t)
-			assertHeader(orgIdPosHeader, "method.request.header.organisation-id", t)
 			assertHeader(contentTypePostHeader, "method.request.header.content-type", t)
 			assertHeader(acceptPostHeader, "method.request.header.accept", t)
 
 			// Get
-			authGetHeader := getRequestParameterValue(getOperation, "integration.request.header.X-JWT-Assertion")
-			orgIdGetHeader := getRequestParameterValue(getOperation, "integration.request.header.organisation-id")
 			contentTypeGetHeader := getRequestParameterValue(getOperation, "integration.request.header.content-type")
 			acceptGetHeader := getRequestParameterValue(getOperation, "integration.request.header.accept")
 
-			assertHeader(authGetHeader, "context.authorizer.stringKey", t)
-			assertHeader(orgIdGetHeader, "method.request.header.organisation-id", t)
 			assertHeader(contentTypeGetHeader, "method.request.header.content-type", t)
 			assertHeader(acceptGetHeader, "method.request.header.accept", t)
 		}

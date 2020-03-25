@@ -13,6 +13,7 @@ func TestMain(m *testing.M) {
 	os.Setenv(ApiGwName, "api-gw-dev")
 	os.Setenv(AuthName, ExpectedAuthorizerName)
 	os.Setenv(CorsEnabled, "true")
+	os.Setenv(CustomHeaders, "X-JWT-Assertion,organisation-id")
 
 	// Run the test suite
 	retCode := m.Run()
