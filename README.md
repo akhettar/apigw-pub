@@ -73,7 +73,7 @@ docker run --env API_GATEWAY_NAME=api-gw-dev \
 --env STAGE_NAME=v1 \
 --env ASSUME_ROLE=arn:aws:iam::****************:role/apigw-role \
 --env AWS_ACCESS_KEY_ID=************ \
---env AWS_SECRET_ACCESS_KEY=******************** apigw/publisher /bin/aws-apigw-publisher
+--env AWS_SECRET_ACCESS_KEY=******************** ayache/apigw-publisher /bin/aws-apigw-publisher
 ```
  
 2. Running the publisher `vpc link` connection type
@@ -92,7 +92,7 @@ docker run --env API_GATEWAY_NAME=wave-api-gw-dev \
 --env STAGE_NAME=v1 \
 --env ASSUME_ROLE=arn:aws:iam::74***87740553:role/apigw-role \
 --env AWS_ACCESS_KEY_*************CYL \
---env AWS_SECRET_ACCESS_KEY=************************** apigw/publisher /bin/aws-apigw-publisher
+--env AWS_SECRET_ACCESS_KEY=************************** ayache/apigw-publisher /bin/aws-apigw-publisher
 ```
 
 ## AWS IAM
