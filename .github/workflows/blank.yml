@@ -4,14 +4,14 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Run a one-line script
-      run: echo Hello, world!
+    - uses: actions/setup-go@v1
+      with:
+        go-version: '1.14' # The Go version to download (if necessary) and use.
     - name: Run a multi-line script
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        echo Running all the tests
+        go test ./...

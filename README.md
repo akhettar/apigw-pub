@@ -1,6 +1,6 @@
 
 # AWS Swagger Publisher
-
+![CI](https://github.com/akhettar/aws-apigw-publisher/workflows/CI/badge.svg?branch=master)
 ![Work in progress](pushing-cart.png)
 
 This tool publishes REST API into API Gateway, it is packed as a docker container and can be run in a `ci pipeline` after a given service
@@ -53,7 +53,7 @@ These are the environment variables required for this tool.
 | `ENDPOINT_URL`            | The internal host and the base endpoint of the service exp :`petstore.swagger.io/api`             | Yes       |
 | `CORS_ENABLED`            | If this flag is present, `cors` is enabled across all the endpoints    | No       |
 | `API_GATEWAY_ID`          | The api gateway Id    | Yes       |
-| `CUSTOM_HEADERS`          | A list of comma separated headers to be mapped in the http headers of the endpoint  | No       |
+| `CUSTOM_HEADERS`          | A list of comma separated headers to be mapped in the http headers of the endpoint, exp: `CUSTOM_HEADERS=header1,header2`  | No       |
 
 
 ## Running the publisher
