@@ -29,8 +29,6 @@ func init() {
 }
 
 func main() {
-
-	// render the swagger - remove unsupported features by aws and add aws extensions
 	client := swagger.NewSwaggerClient(utils.RetrieveEnvVar(SwaggerUrl))
 	doc, err := client.FetchSwagger()
 	if err != nil {
