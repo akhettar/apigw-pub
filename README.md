@@ -1,6 +1,7 @@
 
 # AWS Swagger Publisher
 ![CI](https://github.com/akhettar/aws-apigw-publisher/workflows/CI/badge.svg?branch=master)
+![](https://img.shields.io/docker/pulls/ayache/apigw-publisher)
 ![Work in progress](pushing-cart.png)
 
 This tool publishes REST API into API Gateway, it is packed as a docker container and can be run in a `ci pipeline` after a given service
