@@ -1,6 +1,12 @@
-name: CI
+name: Master CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      pull_request:
+        branches:
+          - master
 
 jobs:
   build:
@@ -23,6 +29,6 @@ jobs:
         repository: ayache/apigw-publisher
 
     - name: Publish to Github registry
-        uses: jerray/publish-docker-action@master
-        with:
-          registry: docker.pkg.github.com
+      uses: jerray/publish-docker-action@master
+      with:
+        registry: docker.pkg.github.com
