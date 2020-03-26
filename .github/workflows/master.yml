@@ -34,3 +34,4 @@ jobs:
         username: ${{ secrets.GIT_USERNAME }}
         password: ${{ secrets.GIT_PASSWORD }}
         registry: docker.pkg.github.com
+        repository: akhettar/apigw-publisher
