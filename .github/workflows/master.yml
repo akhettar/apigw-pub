@@ -27,12 +27,3 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: ayache/apigw-publisher
-
-    - name: Publish to Github registry
-      uses: jerray/publish-docker-action@master
-      with:
-        username: ${{ secrets.GIT_USERNAME }}
-        password: ${{ secrets.GIT_TOKEN }}
-        registry: docker.pkg.github.com
-        repository: akhettar-tools/aws/apigw-publisher
-        auto_tag: true

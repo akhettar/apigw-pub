@@ -96,6 +96,36 @@ docker run --env API_GATEWAY_NAME=wave-api-gw-dev \
 --env AWS_SECRET_ACCESS_KEY=************************** ayache/apigw-publisher /bin/aws-apigw-publisher
 ```
 
+## Running the publisher in a circleci pipeline
+
+```yaml
+defaults: &swaggerpublisher
+  <<: *dir
+  docker:
+    - image: ayache/swagger-publisher
+
+publish-apigw-dev:
+    <<: *swaggerpublisher
+    steps:
+      - checkout
+      - run:
+          name: Publish swagger to api gateway
+          command: |
+            SWAGGER_URL=https://raw.githubusercontent.com/swagger-api/swagger-spec/master/examples/v2.0/json/petstore-expanded.json \
+            ENDPOINT_URL=petstore.swagger.io/api \
+            CONNECTION_TYPE=VPC_LINK \
+            VPC_LINK_ID=226jx1 \
+            AUTH_URL=arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:<aws-account-id>:function:api-gateway-authorizer-dev-auth/invocations \
+            AUTH_NAME=wave-api-gw-dev \
+            AUTH_TYPE=apiKey \
+            STAGE_NAME=v1 \
+            API_GATEWAY_ID=nilbbdqvqg \
+            STAGE_NAME=v1 \
+            ASSUME_ROLE=arn:aws:iam::74***87740553:role/apigw-role \
+            AWS_ACCESS_KEY_*************CYL \
+            AWS_SECRET_ACCESS_KEY=************************** ayache/apigw-publisher /bin/aws-apigw-publisher /bin/swagger-publisher
+```
+
 ## AWS IAM
 This tool recommends that the AWS IAM user is created with virtually no permissions at all. The only permission given to this user is the ability to assume a role which allows the iam user to publish REST endpoints to API Gateway. Some details can be
 found in [AWS IAM policy do](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-iam-policy-examples.html)
