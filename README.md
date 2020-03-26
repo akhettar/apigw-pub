@@ -1,6 +1,6 @@
 
 # AWS Swagger Publisher
-![CI](https://github.com/akhettar/aws-apigw-publisher/workflows/CI/badge.svg?branch=master)
+![Master CI](https://github.com/akhettar/aws-apigw-publisher/workflows/Master%20CI/badge.svg)
 ![](https://img.shields.io/docker/pulls/ayache/apigw-publisher)
 ![Work in progress](pushing-cart.png)
 
