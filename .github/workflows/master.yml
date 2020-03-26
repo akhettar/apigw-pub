@@ -32,4 +32,5 @@ jobs:
       uses: jerray/publish-docker-action@master
       with:
         username: ${{ secrets.GIT_USERNAME }}
+        password: ${{ secrets.GIT_PASSWORD }}
         registry: docker.pkg.github.com
