@@ -98,6 +98,8 @@ docker run --env API_GATEWAY_NAME=wave-api-gw-dev \
 
 ## Running the publisher in a circleci pipeline
 
+The step below should be run after a service is successfully deployed to a target environment so the REST API can be deployed from the latest swagger document
+
 ```yaml
 defaults: &swaggerpublisher
   <<: *dir
