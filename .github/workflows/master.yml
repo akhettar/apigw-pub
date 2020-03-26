@@ -30,7 +30,7 @@ jobs:
       uses: jerray/publish-docker-action@master
       with:
         username: ${{ secrets.GIT_USERNAME }}
-        password: ${{ secrets.GIT_PASSWORD }}
+        password: ${{ secrets.GIT_TOKEN }}
         registry: docker.pkg.github.com
         repository: akhettar/aws/apigw-publisher
         auto_tag: true
