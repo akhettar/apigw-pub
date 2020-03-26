@@ -1,4 +1,5 @@
 name: Master CI
+
 on:
   push:
     branches:
@@ -6,6 +7,7 @@ on:
     pull_request:
       branches:
         - master
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +29,10 @@ jobs:
         repository: ayache/apigw-publisher
 
     - name: Publish to Github registry
-      run: |
-        docker login docker.pkg.github.com -u badrshs -p ${{ secrets.GIT_TOKEN }}
-        docker build -t docker.pkg.github.com/akhettar/aws/apigw-publisher:latest .
-        docker push docker.pkg.github.com/akhettar/aws/apigw-publisher:latest
+      uses: jerray/publish-docker-action@master
+      with:
+        username: ${{ secrets.GIT_USERNAME }}
+        password: ${{ secrets.GIT_TOKEN }}
+        registry: docker.pkg.github.com
+        repository: akhettar-tools/aws/apigw-publisher
+        auto_tag: true
