@@ -4,14 +4,12 @@
 ![](https://img.shields.io/docker/pulls/ayache/apigw-publisher)
 ![Work in progress](pushing-cart.png)
 
-This tool publishes REST API into API Gateway, it is packed as a docker container and can be run in a `ci pipeline` after a given service
-is deployed to the target environment. This tool fetches the swagger document from a given `url`, render it by adding all the required AWS extensions
-and publish it to the API gateway 
+This tool publishes REST API to AWS API Gateway from a given swagger document. It is packed as a docker container so it can be run in a `continuious integration pipeline`. This tool fetches the swagger document from a given `url`, render it by adding all the required AWS extensions
+and publish it to AWS API gateway.
 
 When the tool is run, it carries out the following tasks:
 
 * Fetches vanilla swagger document from a given deployed service - exp: `https://raw.githubusercontent.com/swagger-api/swagger-spec/master/examples/v2.0/json/petstore-expanded.json`
-* Renders the swagger document so as the `example` tag is removed, allow all mimetype (*/*) to application/json
 * Add aws extensions - see [AWS extensions](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions-integration.html) to the swagger doc
 * Import the rendered swagger into API Gateway - this will create the api gateway resources.
 * Deploy all the resources created above into the given `stage`
