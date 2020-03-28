@@ -127,7 +127,7 @@ publish-apigw-dev:
 ```
 
 ## AWS IAM
-This tool recommends that the AWS IAM user is created with virtually no permissions at all. The only permission given to this user is the ability to assume a role which allows the iam user to publish REST endpoints to API Gateway. Some details can be
+This tool recommends that the AWS IAM user is created with virtually no permissions at all. The only permission given to this user is the ability to assume a role by which the IAM user is permitted to publish REST endpoints to API Gateway. Some details can be
 found in [AWS IAM policy do](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-iam-policy-examples.html)
 
 ## Authorization schemes
