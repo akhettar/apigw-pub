@@ -1,10 +1,10 @@
 
 # AWS Swagger Publisher
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4839ba123ed9492aad75e84b5d89f4cf)](https://app.codacy.com/manual/akhettar/aws-apigw-publisher?utm_source=github.com&utm_medium=referral&utm_content=akhettar/aws-apigw-publisher&utm_campaign=Badge_Grade_Dashboard)
-
 ![Master CI](https://github.com/akhettar/aws-apigw-publisher/workflows/Master%20CI/badge.svg)
 ![](https://img.shields.io/docker/pulls/ayache/apigw-publisher)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4839ba123ed9492aad75e84b5d89f4cf)](https://app.codacy.com/manual/akhettar/aws-apigw-publisher?utm_source=github.com&utm_medium=referral&utm_content=akhettar/aws-apigw-publisher&utm_campaign=Badge_Grade_Dashboard)
+
 ![Work in progress](pushing-cart.png)
 
 This tool publishes REST API to AWS API Gateway from a given swagger document. It is packed as a docker container so it can be run in a `continuious integration pipeline`. This tool fetches the swagger document from a given `url`, render it by adding all the required AWS extensions
