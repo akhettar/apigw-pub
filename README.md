@@ -7,7 +7,7 @@
 
 ![Work in progress](pushing-cart.png)
 
-This tool publishes REST API to AWS API Gateway from a given swagger document. It is packed as a docker container so it can be run in a `continuious integration pipeline`. This tool fetches the swagger document from a given `url`, render it by adding all the required AWS extensions
+This tool publishes REST API to AWS API Gateway from a `swagger document`. It is packed as a docker container so it can be run in a `continuious integration pipeline`. This tool fetches the swagger document from a given `url`, render it by adding all the required AWS extensions
 and publish it to AWS API gateway.
 
 When the tool is run, it carries out the following tasks:
