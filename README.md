@@ -5,7 +5,7 @@
 ![](https://img.shields.io/docker/pulls/ayache/apigw-publisher)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4839ba123ed9492aad75e84b5d89f4cf)](https://app.codacy.com/manual/akhettar/aws-apigw-publisher?utm_source=github.com&utm_medium=referral&utm_content=akhettar/aws-apigw-publisher&utm_campaign=Badge_Grade_Dashboard)
 
-![Work in progress](pushing-cart.png)
+![Work in progress](pushing-cart.png)    
 
 This tool publishes REST API to AWS API Gateway from a `swagger document`. It is packed as a docker container so it can be run in a `continuious integration pipeline`. This tool fetches the swagger document from a given `url`, render it by adding all the required AWS extensions
 and publish it to AWS API gateway.
@@ -18,6 +18,8 @@ When the tool is run, it carries out the following tasks:
 * Deploy all the resources created above into the given `stage`
 
 ## API Extensions
+
+![APIGW exporter](export-swagger.png)
 
 In order to control this tool on deployment, there are a few Swagger Extensions we leverage as configuration.
 
