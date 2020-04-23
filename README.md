@@ -50,7 +50,7 @@ These are the environment variables required for this tool.
 | `AUTH_URL`                | If `custom` authentication is enabled on the endpoints then the `authentcation url` is required `- more details in the auth section below`    | No       |
 | `AUTH_NAME`               | The authorizer name, see below the endpoint auth section for more details   | No       |
 | `AUTH_TYPE`               | Currently only the custom auth is supported `apiKey`    | No       |
-| `SWAGGER_URL`             | The url of the swagger document that can be sourced from     | Yes       |
+| `SWAGGER_URL`             | The url of the swagger document that can be sourced from `in json format` not the actual the url to access the html     | Yes       |
 | `AWS_ACCESS_KEY_ID`       | The aws access key    | Yes       |
 | `AWS_SECRET_ACCESS_KEY`   | The aws secret access key    | Yes       |
 | `ASSUME_ROLE`             | The assume role in arn format that allow this tool to publish the rest endpoints to api gateway   | Yes       |
