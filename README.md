@@ -1,6 +1,6 @@
 # AWS Swagger Publisher
 
-![Master CI](https://github.com/akhettar/aws-apigw-publisher/workflows/Master%20CI/badge.svg)
+![Master CI](https://github.com/akhettar/apigw-pub/workflows/Master%20CI/badge.svg)
 ![](https://img.shields.io/docker/pulls/ayache/apigw-publisher)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4839ba123ed9492aad75e84b5d89f4cf)](https://app.codacy.com/manual/akhettar/aws-apigw-publisher?utm_source=github.com&utm_medium=referral&utm_content=akhettar/aws-apigw-publisher&utm_campaign=Badge_Grade_Dashboard)
 
