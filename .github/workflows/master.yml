@@ -30,9 +30,13 @@ jobs:
         WITH_V: true
 
     - name: Publish to docker Registry
-      uses: jerray/publish-docker-action@tag
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        repository: ayache/apigw-publisher
-        auto_tag: true
+      run: |
+        export tag="$(git describe --tags `git rev-list --tags --max-count=1`)"
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker docker build -t ayache/apigw-publisher:${tag}
+        docker docker build -t ayache/apigw-publisher
+        docker push ayache/apigw-publisher
+        docker push ayache/apigw-publisher:${tag}
+
+
+
