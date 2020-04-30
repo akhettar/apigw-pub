@@ -35,4 +35,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: ayache/apigw-publisher
-        auto_tag: tag
+        auto_tag: true
