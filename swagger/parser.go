@@ -3,8 +3,8 @@ package swagger
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/akhettar/aws-apigw-publisher/model"
-	"github.com/akhettar/aws-apigw-publisher/utils"
+	"github.com/akhettar/apigw-pub/model"
+	"github.com/akhettar/apigw-pub/utils"
 	"net/http"
 	"os"
 	"reflect"

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/akhettar/aws-apigw-publisher/apigw"
-	"github.com/akhettar/aws-apigw-publisher/swagger"
-	"github.com/akhettar/aws-apigw-publisher/utils"
+	"github.com/akhettar/apigw-pub/apigw"
+	"github.com/akhettar/apigw-pub/swagger"
+	"github.com/akhettar/apigw-pub/utils"
 	log "github.com/sirupsen/logrus"
 	"os"
 )

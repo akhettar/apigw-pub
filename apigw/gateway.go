@@ -1,7 +1,7 @@
 package apigw
 
 import (
-	"github.com/akhettar/aws-apigw-publisher/utils"
+	"github.com/akhettar/apigw-pub/utils"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
