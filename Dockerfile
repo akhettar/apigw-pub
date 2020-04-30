@@ -4,7 +4,7 @@ FROM golang:alpine3.11 AS build_base
 # Install some dependencies needed to build the project
 USER root
 RUN apk add bash ca-certificates git gcc g++ libc-dev
-WORKDIR /go/src/swagger-publisher
+WORKDIR /go/src/apigw-pub
 
 # Force the go compiler to use modules
 ENV GO111MODULE=on
@@ -29,5 +29,5 @@ RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go install -a -tags netgo -ldflags '-w
 FROM alpine AS swaggerPublisher
 
 # Finally we copy the statically compiled Go binary and the docker entry point
-COPY --from=tool_builder /go/bin/aws-apigw-publisher /bin/aws-apigw-publisher
+COPY --from=tool_builder /go/bin/apigw-pub /bin/apigw-pub
 COPY --from=tool_builder /go/bin/docker-entrypoint.sh /bin/docker-entrypoint.sh

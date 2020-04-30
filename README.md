@@ -1,4 +1,3 @@
-
 # AWS Swagger Publisher
 
 ![Master CI](https://github.com/akhettar/aws-apigw-publisher/workflows/Master%20CI/badge.svg)
@@ -17,24 +16,7 @@ When the tool is run, it carries out the following tasks:
 * Import the rendered swagger into API Gateway - this will create the api gateway resources.
 * Deploy all the resources created above into the given `stage`
 
-## API Extensions
 
-![APIGW exporter](export-swagger.png)
-
-In order to control this tool on deployment, there are a few Swagger Extensions we leverage as configuration.
-
-* `x-publish` - this flag if set to false, the endpoint will not get published.
-* `x-auth-disabled` - this flag if set to true, the endpoint will not be secured if custom auth is required
-
-In Java these extensions can be controlled using something similar to the below, simply add this annotation above a controller method:
-
-```
-@ApiOperation(value = "Describe this API for the Swagger docs",
-        extensions = @Extension(properties = {
-            @ExtensionProperty(name = "x-publish", value = "false"),
-            @ExtensionProperty(name = "x-auth-disabled", value = "true"),
-        }))
-```
 
 ## Required environment variables
 
@@ -59,6 +41,10 @@ These are the environment variables required for this tool.
 | `API_GATEWAY_ID`          | The api gateway Id    | Yes       |
 | `CUSTOM_HEADERS`          | A list of comma separated headers to be mapped in the http headers of the endpoint, exp: `CUSTOM_HEADERS=header1,header2`  | No       |
 
+## AWS IAM
+
+This tool recommends that the AWS IAM user is created with virtually no permissions at all. The only permission given to this user is the ability to assume a role by which the IAM user is permitted to publish REST endpoints to API Gateway. Some details can be
+found in [AWS IAM policy do](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-iam-policy-examples.html)
 
 ## Running the publisher
 
@@ -77,7 +63,7 @@ docker run --env API_GATEWAY_NAME=api-gw-dev \
 --env STAGE_NAME=v1 \
 --env ASSUME_ROLE=arn:aws:iam::****************:role/apigw-role \
 --env AWS_ACCESS_KEY_ID=************ \
---env AWS_SECRET_ACCESS_KEY=******************** ayache/apigw-publisher /bin/aws-apigw-publisher
+--env AWS_SECRET_ACCESS_KEY=******************** ayache/apigw-publisher /bin/apigw-pub
 ```
  
 2. Running the publisher `vpc link` connection type
@@ -96,7 +82,7 @@ docker run --env API_GATEWAY_NAME=wave-api-gw-dev \
 --env STAGE_NAME=v1 \
 --env ASSUME_ROLE=arn:aws:iam::74***87740553:role/apigw-role \
 --env AWS_ACCESS_KEY_*************CYL \
---env AWS_SECRET_ACCESS_KEY=************************** ayache/apigw-publisher /bin/aws-apigw-publisher
+--env AWS_SECRET_ACCESS_KEY=************************** ayache/apigw-publisher /bin/apigw-pub
 ```
 
 ## Running the publisher in a circleci pipeline
@@ -128,12 +114,28 @@ publish-apigw-dev:
             STAGE_NAME=v1 \
             ASSUME_ROLE=arn:aws:iam::74***87740553:role/apigw-role \
             AWS_ACCESS_KEY_*************CYL \
-            AWS_SECRET_ACCESS_KEY=************************** ayache/apigw-publisher /bin/aws-apigw-publisher /bin/swagger-publisher
+            AWS_SECRET_ACCESS_KEY=************************** ayache/apigw-publisher /bin/apigw-pub
 ```
 
-## AWS IAM
-This tool recommends that the AWS IAM user is created with virtually no permissions at all. The only permission given to this user is the ability to assume a role by which the IAM user is permitted to publish REST endpoints to API Gateway. Some details can be
-found in [AWS IAM policy do](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-iam-policy-examples.html)
+
+## API Extensions
+
+![APIGW exporter](export-swagger.png)
+
+In order to control this tool on deployment, there are a few Swagger Extensions that can be leveraged as configuration.
+
+* `x-publish` - this flag if set to false, the endpoint will not get published.
+* `x-auth-disabled` - this flag if set to true, the endpoint will not be secured if custom auth is required
+
+In Java these extensions can be controlled using something similar to the below, simply add this annotation above a controller method:
+
+```
+@ApiOperation(value = "Describe this API for the Swagger docs",
+        extensions = @Extension(properties = {
+            @ExtensionProperty(name = "x-publish", value = "false"),
+            @ExtensionProperty(name = "x-auth-disabled", value = "true"),
+        }))
+```
 
 ## Authorization schemes
 
