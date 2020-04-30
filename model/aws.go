@@ -12,5 +12,3 @@ type AWSAPIGatewayIntegration struct {
 	RequestTemplates    map[string]string                 `json:"requestTemplates"`
 	Responses           map[string]map[string]interface{} `json:"responses"`
 }
-
-// AWSSecurityDefinition the custom security definition used by API GW
