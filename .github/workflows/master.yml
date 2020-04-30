@@ -33,8 +33,8 @@ jobs:
       run: |
         export tag="$(git describe --tags `git rev-list --tags --max-count=1`)"
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker docker build -t ayache/apigw-publisher:${tag}
-        docker docker build -t ayache/apigw-publisher
+        docker build -t ayache/apigw-publisher:${tag}
+        docker build -t ayache/apigw-publisher
         docker push ayache/apigw-publisher
         docker push ayache/apigw-publisher:${tag}
 
