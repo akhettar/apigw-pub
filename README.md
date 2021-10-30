@@ -48,6 +48,8 @@ found in [AWS IAM policy do](https://docs.aws.amazon.com/apigateway/latest/devel
 
 ## Running the publisher
 
+The swagger publisher can be run as a docker container or simply as Go binary.
+
 1. Running the publisher with `public (http)` connection type
 
 ```shell script

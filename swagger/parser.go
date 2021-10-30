@@ -71,6 +71,7 @@ func (client SwaggerParser) FetchSwagger() (swg.Swagger, error) {
 
 	var data swg.Swagger
 
+
 	if err != nil {
 		log.Errorf("Failed to fetch swagger doc from %s", client.swaggerUrl)
 		return data, err
