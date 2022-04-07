@@ -202,5 +202,6 @@ resource "aws_api_gateway_method" "any" {
 
 Details on the authorization scheme can be found here: [AWS swagger extension authorizer](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-swagger-extensions-authorizer.html)
 
+
 # License
 [MIT](LICENSE)
